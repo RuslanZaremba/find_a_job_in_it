@@ -37,4 +37,3 @@ class Command(BaseCommand):
                     salary_max=job['salary_to'],
                     published_at=job['posted']
                 )
-

@@ -16,13 +16,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from app_work.views import IndexView, VacanciesList, CompanyDetail, VacancyDetail, VacanciesByCategory
+from app_work import views
+from app_work.views import IndexView, VacanciesListView, CompanyDetailView, VacancyDetailView, VacanciesByCategoryView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', IndexView.as_view(), name='index'),
-    path('companies/<int:pk>/', CompanyDetail.as_view(), name='company'),
-    path('vacancies/', VacanciesList.as_view(), name='vacancies'),
-    path('vacancy/<int:pk>/', VacancyDetail.as_view(), name='vacancy'),
-    path('vacancies/cat/<str:specialty>', VacanciesByCategory.as_view(), name='vacancy'),
+    path('vacancies/', VacanciesListView.as_view(), name='vacancies'),
+    path('companies/<int:pk>/', CompanyDetailView.as_view(), name='company'),
+    path('vacancy/<int:pk>/', VacancyDetailView.as_view(), name='vacancy'),
+    path('vacancies/cat/<str:specialty>', VacanciesByCategoryView.as_view(), name='vacancy_by_category'),
 ]
+
+handler404 = views.custom_handler404
+handler500 = views.custom_handler500

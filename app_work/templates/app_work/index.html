@@ -1,7 +1,9 @@
 {% extends 'app_work/base.html' %}
 
+{% block title %}{{ title }}{% endblock %}
 
 {% block container %}
+
 <main class="container mt-3">
     <section>
         <h1 class="h1 text-center mx-auto mt-4 py-5"><strong>Вакансии для <br>Junior-разработчиков</strong></h1>
@@ -36,11 +38,14 @@
                     <img class="mx-auto d-block" src="{{ specialty.picture }}" width="80" height="80" alt="">
                     <div class="card-body">
                         <p class="card-text mb-2">{{ specialty.title }}</p>
-                        <p class="card-text"><a href="#">{{ specialty.total }} вакансий</a></p>
+                        <p class="card-text"><a href="{% url 'vacancy_by_category'  specialty.code  %}">
+                            {{ specialty.total }} вакансий</a></p>
                     </div>
                 </div>
             </div>
+
             {% endfor %}
+
         </div>
         <div class="row mb-4">
             {% for specialty in specialties|slice:"4:" %}
@@ -49,12 +54,13 @@
                     <img class="mx-auto d-block" src="{{ specialty.picture }}" width="80" height="80" alt="">
                     <div class="card-body">
                         <p class="card-text mb-2">{{ specialty.title }}</p>
-                        <p class="card-text"><a href="#">{{ specialty.total }} вакансии</a></p>
+                        <p class="card-text"><a href="{% url 'vacancy_by_category'  specialty.code  %}">
+                            {{ specialty.total }} вакансии</a></p>
                     </div>
                 </div>
             </div>
-            {% endfor %}
 
+            {% endfor %}
 
         </div>
     </section>
@@ -69,11 +75,14 @@
                         <img class="mx-auto d-block mw-100" src="{{ company.logo }}" alt="">
                     </a>
                     <div class="card-body">
-                        <p class="card-text"><a href="#">{{ company.total }} вакансий</a></p>
+                        <p class="card-text"><a href="{% url 'company' company.pk %}">{{ company.total }} вакансий</a>
+                        </p>
                     </div>
                 </div>
             </div>
+
             {% endfor %}
+
         </div>
         <div class="row mb-4">
             {% for company in companies|slice:"4:" %}
@@ -87,8 +96,11 @@
                     </div>
                 </div>
             </div>
-{% endfor %}
+
+            {% endfor %}
+
         </div>
     </section>
 </main>
-{% endblock %}
+
+{% endblock container%}
