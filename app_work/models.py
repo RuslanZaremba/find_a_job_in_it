@@ -1,4 +1,7 @@
+from django.contrib.auth.models import User
 from django.db import models
+
+from conf.settings import MEDIA_COMPANY_IMAGE_DIR, MEDIA_SPECIALITY_IMAGE_DIR
 
 
 class Vacancy(models.Model):
@@ -23,9 +26,10 @@ class Vacancy(models.Model):
 class Company(models.Model):
     name = models.CharField(max_length=100)
     location = models.CharField(max_length=100)
-    logo = models.URLField(default='https://place-hold.it/100x60')
+    logo = models.ImageField(upload_to=MEDIA_COMPANY_IMAGE_DIR)
     description = models.TextField()
     employee_count = models.IntegerField(default=0)
+    owner = models.OneToOneField(User, on_delete=models.CASCADE, null=False, related_name='company')
 
     class Meta:
         verbose_name = 'Компания'
@@ -39,7 +43,7 @@ class Company(models.Model):
 class Specialty(models.Model):
     code = models.CharField(max_length=30)
     title = models.CharField(max_length=50)
-    picture = models.URLField(default='https://place-hold.it/100x60')
+    picture = models.ImageField(upload_to=MEDIA_SPECIALITY_IMAGE_DIR)
 
     class Meta:
         verbose_name = 'Специализация'
@@ -48,3 +52,19 @@ class Specialty(models.Model):
 
     def __str__(self):
         return f"{self.code}"
+
+
+class Application(models.Model):
+    name = models.CharField(max_length=150)
+    phone = models.CharField(max_length=30)
+    letter = models.TextField()
+    vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE, related_name='applications')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='applications')
+
+    class Meta:
+        verbose_name = 'Отклик'
+        verbose_name_plural = 'Отклики'
+        ordering = ['pk']
+
+    def __str__(self):
+        return f"{self.name}"

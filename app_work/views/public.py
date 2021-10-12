@@ -1,7 +1,12 @@
+from django.contrib.auth.models import User
 from django.db.models import Count
 from django.http import HttpResponseNotFound, HttpResponseServerError
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView
 
+from app_work.forms import SentApplicationForm
 from app_work.models import Specialty, Company, Vacancy
 
 
@@ -45,12 +50,12 @@ class CompanyDetailView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['company'] = Company.objects.get(pk=self.kwargs['pk'])
+        context['company'] = get_object_or_404(Company, pk=self.kwargs['pk'])
         context['title'] = 'Компания | Джуманджи'
         return context
 
     def get_queryset(self):
-        return Vacancy.objects.filter(company=self.kwargs['pk'])
+        return Vacancy.objects.filter(company=self.kwargs['pk']).select_related('specialty')
 
 
 class VacancyDetailView(DetailView):
@@ -58,6 +63,26 @@ class VacancyDetailView(DetailView):
     template_name = 'app_work/vacancy.html'
     context_object_name = 'vacancy'
     pk_url_kwarg = 'pk'
+
+    def post(self, request, pk):
+        form = SentApplicationForm(request.POST)
+        user = get_object_or_404(User, id=request.user.id)
+        vacancy = get_object_or_404(Vacancy, id=pk)
+        if form.is_valid():
+            form = form.save(commit=False)
+            form.vacancy = vacancy
+            form.user = user
+            form.save()
+            return redirect(reverse('success_sent_application', args=[pk]))
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(VacancyDetailView, self).get_context_data(*args, **kwargs)
+        context['form'] = SentApplicationForm()
+        return context
+
+
+class SuccessSentApplication(TemplateView):
+    template_name = 'app_work/sent.html'
 
 
 def custom_handler404(request, exception):

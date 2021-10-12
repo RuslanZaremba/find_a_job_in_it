@@ -13,20 +13,21 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
-from app_work import views
-from app_work.views import IndexView, VacanciesListView, CompanyDetailView, VacancyDetailView, VacanciesByCategoryView
+from app_work.views import public
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', IndexView.as_view(), name='index'),
-    path('vacancies/', VacanciesListView.as_view(), name='vacancies'),
-    path('companies/<int:pk>/', CompanyDetailView.as_view(), name='company'),
-    path('vacancy/<int:pk>/', VacancyDetailView.as_view(), name='vacancy'),
-    path('vacancies/cat/<str:specialty>', VacanciesByCategoryView.as_view(), name='vacancy_by_category'),
+    path('', include('app_work.urls')),
+    path('', include('accounts.urls')),
 ]
 
-handler404 = views.custom_handler404
-handler500 = views.custom_handler500
+handler404 = public.custom_handler404
+handler500 = public.custom_handler500
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

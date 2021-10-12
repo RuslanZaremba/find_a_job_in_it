@@ -13,37 +13,59 @@
         </div>
         <div class="col-12 col-lg-8">
             <section class="pl-3">
-                <a href="#"><img src="https://place-hold.it/130x80" width="130" height="80" alt=""></a>
+                <a href="{% url 'company' vacancy.company.pk %}"><img src="{{ vacancy.company.logo.url }}" width="130"
+                                                                      height="80" alt=""></a>
                 <div class="d-flex align-items-baseline align-content-baseline">
                     <h1 class="h2 mt-4 font-weight-bold">{{ vacancy.title }}</h1>
                     <p class="m-0 pl-3">{{ vacancy.salary_min }} – {{ vacancy.salary_max }} Р</p>
                 </div>
                 <p class="mt-2">{{ vacancy.skills }}</p>
-                <p class="text-muted mb-4">{{ vacancy.company.name|title }} ({{ vacancy.company.employee_count }} человек),
+                <p class="text-muted mb-4">{{ vacancy.company.name|title }} ({{ vacancy.company.employee_count }}
+                    человек),
                     {{ vacancy.company.location }} или удаленно</p>
                 <div style="line-height: 1.8;">
                     {% autoescape off %}
-                        {{ vacancy.description }}
+                    {{ vacancy.description }}
                     {% endautoescape %}
                 </div>
-                <form action="/echo" class="card mt-4 mb-3" enctype="multipart/form-data">
+                {% if user.is_authenticated %}
+
+
+                <form method="post" class="card mt-4 mb-3" enctype="multipart/form-data">
+                    {% csrf_token %}
                     <div class="card-body mx-3">
                         <p class="h5 mt-3 font-weight-normal">Отозваться на вакансию</p>
                         <div class="form-group">
-                            <label class="mb-1 mt-2" for="userName">Вас зовут</label>
-                            <input class="form-control" type="text" placeholder="" id="userName">
+                            <label class="mb-1 mt-2" for="{{ form.name.id_for_label }}">Вас зовут</label>
+                            {{ form.name }}
+                            {{ form.name.errors }}
+
                         </div>
                         <div class="form-group">
-                            <label class="mb-1" for="userPhone">Ваш телефон</label>
-                            <input class="form-control" type="tel" placeholder="" id="userPhone">
+                            <label class="mb-1" for="{{ form.phone.id_for_label }}">Ваш телефон</label>
+                            {{ form.phone }}
+                            {{ form.phone.errors }}
                         </div>
                         <div class="form-group">
-                            <label class="mb-1" for="userMsg">Сопроводительное письмо</label>
-                            <textarea class="form-control" rows="8" id="userMsg"></textarea>
+                            <label class="mb-1" for="{{ form.letter.id_for_label }}">Сопроводительное письмо</label>
+                            {{ form.letter }}
+                            {{form.letter.errors }}
                         </div>
-                        <input type="submit" class="btn btn-primary mt-4 mb-2" value="Записаться на пробный урок">
+                        <input type="submit" class="btn btn-primary mt-4 mb-2" value="Откликнуться">
                     </div>
                 </form>
+                {% else %}
+                <div class="alert alert-primary d-flex align-items-center" role="alert">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                         class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img"
+                         aria-label="Warning:">
+                        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                    </svg>
+                    <div>
+                        Оставить отклик может только зарегистрированный пользователь.
+                    </div>
+                </div>
+                {% endif %}
             </section>
         </div>
     </div>
