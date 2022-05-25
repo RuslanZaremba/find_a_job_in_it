@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.urls import reverse
 
 from conf.settings import MEDIA_COMPANY_IMAGE_DIR, MEDIA_SPECIALITY_IMAGE_DIR
 
@@ -19,6 +20,9 @@ class Vacancy(models.Model):
         verbose_name_plural = 'Вакансии'
         ordering = ['-published_at']
 
+    def get_absolute_url(self):
+        return reverse('vacancy', kwargs={'pk': self.pk})
+
     def __str__(self):
         return f"{self.title}"
 
@@ -28,7 +32,7 @@ class Company(models.Model):
     location = models.CharField(max_length=100)
     logo = models.ImageField(upload_to=MEDIA_COMPANY_IMAGE_DIR)
     description = models.TextField()
-    employee_count = models.IntegerField(default=0)
+    employee_count = models.IntegerField(default=1)
     owner = models.OneToOneField(User, on_delete=models.CASCADE, null=False, related_name='company')
 
     class Meta:
@@ -38,6 +42,9 @@ class Company(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+    def get_absolute_url(self):
+        return reverse('company_edit', kwargs={'pk': self.pk})
 
 
 class Specialty(models.Model):

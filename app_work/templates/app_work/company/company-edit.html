@@ -1,16 +1,13 @@
 {% extends 'app_work/base.html' %}
-
 {% block style %}
 <style>
     body {
       background-color: #F6F2E6;
     }
-
 </style>
 {% endblock %}
 
 {% block container %}
-
 <main class="container mt-3 pb-5">
     <div class="row mt-5">
         <div class="col-12 col-lg-4">
@@ -18,7 +15,7 @@
                 <h1 class="h4 pt-2 pb-2">Моя компания</h1>
                 <div class="nav flex-column nav-pills">
                     <a class="nav-link active" href="#">1. Информация о&nbsp;компании</a>
-                    <a class="nav-link" href="#">2. Вакансии</a>
+                    <a class="nav-link" href="{%url 'vacancy_list'%}">2. Вакансии</a>
                 </div>
             </aside>
         </div>
@@ -29,7 +26,7 @@
                     <section class="tab-pane fade show active">
                         <h2 class="h4 pt-2 pb-3">Информация о&nbsp;компании</h2>
                         <p class="alert alert-info" role="alert">
-                            Информация о компании обновлена
+                            Информация о компании обновлена!!!!!!!!!!!!!!
                         </p>
                         <form method="post" enctype="multipart/form-data">
                             {% csrf_token %}

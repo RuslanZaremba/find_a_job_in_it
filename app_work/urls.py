@@ -2,9 +2,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
 
-from app_work.views.public import IndexView, VacanciesListView, CompanyDetailView, VacancyDetailView, \
-    VacanciesByCategoryView, SuccessSentApplication
-from app_work.views.my_company import CompanyLetStartView, CompanyEditView, CompanyCreateView
+from app_work.views.public import *
+from app_work.views.my_company import *
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
@@ -17,4 +16,7 @@ urlpatterns = [
     path('mycompany/letsstart/', CompanyLetStartView.as_view(), name='company_let_start'),
     path('mycompany/create/', CompanyCreateView.as_view(), name='company_create'),
     path('mycompany/<int:pk>', CompanyEditView.as_view(), name='company_edit'),
+
+    path('mycompany/vacancies/', MyCompanyVacancies.as_view(), name='vacancy_list'),
+    path('mycompany/vacancies/create/', MyCompanyCreateVacancy.as_view(), name='vacancy_create'),
 ]

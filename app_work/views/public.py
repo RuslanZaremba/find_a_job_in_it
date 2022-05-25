@@ -3,7 +3,6 @@ from django.db.models import Count
 from django.http import HttpResponseNotFound, HttpResponseServerError
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView
 
 from app_work.forms import SentApplicationForm
