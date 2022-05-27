@@ -13,7 +13,7 @@ class Vacancy(models.Model):
     description = models.TextField()
     salary_min = models.IntegerField(default=0)
     salary_max = models.IntegerField(default=0)
-    published_at = models.DateField()
+    published_at = models.DateField(auto_now_add=True)
 
     class Meta:
         verbose_name = 'Вакансия'

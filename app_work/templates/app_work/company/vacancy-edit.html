@@ -29,8 +29,9 @@
                     <section>
                         <h2 class="h4 pt-2 pb-3">Backend Middle/Senior</h2>
                         <p class="alert alert-info" role="alert">Вакансия обновлена</p>
-                        <form action="post" enctype="multipart/form-data">
+                        <form method="post" enctype="multipart/form-data">
                             {% csrf_token %}
+                            {{ form.company }}
                             <div class="row">
                                 <div class="col-12 col-md-6">
                                     <div class="form-group pb-2">

@@ -1,4 +1,7 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import request
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import TemplateView, CreateView, UpdateView, ListView
 
@@ -38,13 +41,21 @@ class MyCompanyVacancies(ListView):
         return Vacancy.objects.filter(company__owner=self.request.user.id)
 
 
-class MyCompanyCreateVacancy(CreateView):
+class CreateVacancy(LoginRequiredMixin, CreateView):
     form_class = VacancyCreateForm
     template_name = 'app_work/company/vacancy-edit.html'
-    extra_context = {'title': 'Редактирование вакансии'}
-    success_url = reverse_lazy('index')
 
-    # def form_valid(self, form):
-    #     form.instance.company = self.request.company
-    #     messages.success(self.request, 'The city has been added to the list of visited places, thank you')
-    #     return super().form_valid(form)
+    def get_context_data(self, **kwargs):
+        context = super(CreateVacancy, self).get_context_data()
+        context['company'] = Company.objects.get(owner=self.request.user.id)
+        return context
+
+    def form_valid(self, form):
+        form.company = self.company
+        form.save()
+        return super().form_valid(form)
+
+
+class UpdateVacancy(UpdateView):
+    form_class = VacancyCreateForm
+    template_name = 'app_work/company/vacancy-edit.html'
